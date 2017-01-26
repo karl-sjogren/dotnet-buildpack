@@ -115,7 +115,7 @@ if [ ! -d ${NODE_MODULES_CACHE_LOCATION} ]; then
 	mkdir -p ${NODE_MODULES_CACHE_LOCATION}
 fi
 
-time cp -a ${NODE_MODULES_CACHE_LOCATION} ${BUILD_DIR}/node_modules
+time cp -r ${NODE_MODULES_CACHE_LOCATION} ${BUILD_DIR}/node_modules
 
 echo "Building ${PROJECT_JSON_FILE}"
 
