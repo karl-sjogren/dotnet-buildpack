@@ -106,6 +106,17 @@ else
 	printf 'Found %s project.json files\n' $(echo "$PROJECT_JSON_FILES" | wc -l | tr -d ' ')
 	PROJECT_JSON_FILE=$(echo "$PROJECT_JSON_FILES" | head -1)
 fi
+
+NODE_MODULES_CACHE_LOCATION=${CACHE_DIR}/node_modules/
+
+echo "Restoring node_modules cache from ${NODE_MODULES_CACHE_LOCATION}"
+
+if [ ! -d ${NODE_MODULES_CACHE_LOCATION} ]; then
+	mkdir -p ${NODE_MODULES_CACHE_LOCATION}
+fi
+
+time cp -a ${NODE_MODULES_CACHE_LOCATION} ${BUILD_DIR}/node_modules
+
 echo "Building ${PROJECT_JSON_FILE}"
 
 export NUGET_PACKAGES="${CACHE_DIR}/nuget/cache"
@@ -128,6 +139,8 @@ cp -r ${LIBUV_CACHE_LOCATION}/libuv ${BUILD_DIR}
 cat <<EOF >$BUILD_DIR/.profile.d/000_libuv.sh
 export LD_LIBRARY_PATH="\$HOME/libuv/lib:\$LD_LIBRARY_PATH"
 EOF
+
+time cp -a ${BUILD_DIR}/node_modules ${NODE_MODULES_CACHE_LOCATION}
 
 # TODO: read Procfile from `commands` in project.json
 if [ -e ${SRC_DIR}/Procfile ]; then
